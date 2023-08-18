@@ -1,0 +1,20 @@
+@import url('./views/checkout-form-view.css');
+@import url('./views/gridwith-filters-view.css');
+
+body.team1 {
+    background-color: var(--lumo-shade-5pct);
+}
+
+body.team1[theme="dark"] {
+    background-color: var(--lumo-shade);
+}
+
+body.team1[theme="high-contrast"] {
+    background-color: var(--lumo-base-color);
+    --vaadin-input-field-border-width: 1px;
+    --vaadin-input-field-border-color: var(--lumo-contrast-40pct);
+
+    --lumo-secondary-text-color: var(--lumo-contrast-90pct);
+    --lumo-tertiary-text-color: var(--lumo-contrast-70pct);
+    --lumo-disabled-text-color: var(--lumo-contrast-50pct);
+}

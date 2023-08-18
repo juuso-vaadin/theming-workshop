@@ -3,17 +3,22 @@ package com.example.application.views;
 import com.example.application.views.checkoutform.CheckoutFormView;
 import com.example.application.views.components.ComponentsView;
 import com.example.application.views.gridwithfilters.GridwithFiltersView;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -22,6 +27,19 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
+
+    private String currentTeam = "";
+    private void switchTeam(String newTeam) {
+        UI.getCurrent().getElement().getClassList().remove(currentTeam);
+        UI.getCurrent().getElement().getClassList().add(newTeam);
+        currentTeam = newTeam;
+    }
+
+    private String currentTheme = "";
+    private void switchTheme(String newTheme) {
+        UI.getCurrent().getElement().setAttribute("theme", currentTheme);
+        currentTheme = newTheme;
+    }
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
@@ -36,7 +54,34 @@ public class MainLayout extends AppLayout {
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-        addToNavbar(true, toggle, viewTitle);
+        Select<String> teamSwitcher = new Select<String>();
+        teamSwitcher.setItems("team1", "team2", "team3");
+
+        teamSwitcher.addValueChangeListener(e -> {
+            switchTeam(teamSwitcher.getValue().toString());
+        });
+
+        Button themeToggle = new Button("Light");
+
+        themeToggle.addClickListener(e -> {
+            
+            if (currentTheme == "dark") {
+                themeToggle.setText("High contrast");
+                currentTheme = "high-contrast";
+            } else if (currentTheme == "high-contrast") {
+                themeToggle.setText("Light");
+                currentTheme = "";
+            } else {
+                themeToggle.setText("Dark");
+                currentTheme = "dark";
+            }
+            switchTheme(currentTheme);
+        });
+        
+        HorizontalLayout headerControls = new HorizontalLayout(teamSwitcher, themeToggle);
+        headerControls.addClassNames(LumoUtility.Gap.SMALL, LumoUtility.Padding.Horizontal.MEDIUM, LumoUtility.Margin.Left.AUTO);
+
+        addToNavbar(true, toggle, viewTitle, headerControls);
     }
 
     private void addDrawerContent() {
